@@ -60,54 +60,59 @@ def add_program_synthesis(example, client):
     lang = example['lang_cluster'].lower()
 
     prompt = f"""
-You are a dependable and precise code generation assistant. Stick closely to the structure and constraints provided. Think carefully before coding.
----
+### Role Instruction
+Act as a senior software engineer specializing in algorithmic problem solving and production-grade code implementation. Read and analyze the problem step by step. Generate a complete, optimized solution adhering strictly to the provided specifications.
 
-## Role Definition
-Act as an experienced software engineer and technical specialist. Follow instructions exactly.
-
----
-
-## Objective
-Write valid code that strictly adheres to the problem statement provided in the ⁠ TASK DETAILS ⁠. The output should follow the structure defined in the ⁠ RESPONSE FORMAT⁠  section. Avoid any extra text or commentary.
-
-### TASK DETAILS
+### Problem Context
 '''
-1.⁠ ⁠Task Overview: {prob_desc_description}
-2.⁠ ⁠Input Format: {prob_desc_input_spec}
-3.⁠ ⁠Output Requirements: {prob_desc_output_spec}
-4.⁠ ⁠Examples:
-   - Sample Input: {prob_desc_sample_inputs}
-   - Sample Output: {prob_desc_sample_outputs}
-   - Notes: {prob_desc_notes}
-5.⁠ ⁠Language: {lang} {env_map[lang]}
-6.⁠ ⁠Coding Guidelines: Follow best practices and style conventions for {lang}
+1.⁠ ⁠Problem Description: {prob_desc_description}
+2.⁠ ⁠Input Specification: {prob_desc_input_spec}
+3.⁠ ⁠Output Specification: {prob_desc_output_spec}
+4.⁠ ⁠Sample Cases:
+   - Input: {prob_desc_sample_inputs}
+   - Expected Output: {prob_desc_sample_outputs}
+   - Explanation: {prob_desc_notes}
 '''
 
----
+### Technical Requirements
+'''
+•⁠  ⁠Target Language: {lang} {env_map[lang]}
+•⁠  ⁠Code Constraints: Minimize external dependencies and complex headers
+•⁠  ⁠Performance: Optimize for time/space complexity
+•⁠  ⁠Standards: Follow {lang} best practices and PEP8/equivalent style guidelines
+'''
 
-## Execution Rules
-•⁠  ⁠Parse and understand the task carefully before starting.
-•⁠  ⁠Provide a brief thought process first.
-•⁠  ⁠Output only the final code, enclosed in a code block, with no explanation outside it.
-
----
-
-## RESPONSE FORMAT
+### Output Format Specification
 '''
 [{{
-  "version": "<programming_language_version>",
-  "target_code": "<fully working solution>"
+  "version": "<exact_language_version>",
+  "target_code": "<complete_solution_code>"
 }}]
 '''
 
-### Template Response
+### Generation Rules
+1.⁠ ⁠Analyze sample I/O patterns to derive implementation logic
+2.⁠ ⁠Validate solution against all specified edge cases
+3.⁠ ⁠Include necessary standard library imports
+4.⁠ ⁠Avoid unnecessary comments but maintain readable code
+5.⁠ ⁠Ensure strict JSON syntax with proper escaping
+6.⁠ ⁠Prohibit markdown formatting or textual explanations
+7. Follow a step by step reasoning approach to ensure clarity and correctness
+
+
+### Example Response
 [{{
   "version": "Python 3.11",
-  "target_code": "def solve(...):\\n    # implementation here"
+  "target_code": "def solution(args):\n    ..."
 }}]
-"""
 
+*Critical Implementation Notes:*
+•⁠  ⁠Output MUST contain ONLY valid JSON parsable by json.loads()
+•⁠  ⁠Never include markdown formatting or triple backticks
+•⁠  ⁠Escape all special characters properly
+•⁠  ⁠Validate JSON syntax before final output
+
+"""
     logging.info('problem src_id: ' + str(prob_uid))
     logging.info(prompt)
 

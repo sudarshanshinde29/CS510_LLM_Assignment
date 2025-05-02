@@ -112,87 +112,59 @@ def add_program_synthesis(example):
     lang = example['lang_cluster'].lower()
 
     prompt = f"""
-            ### Role
-            You are a highly skilled algorithm engineer tasked with solving complex programming problems. Given a problem description, reason step by step and implement a correct, optimized, and idiomatic solution in {lang} {env_map[lang]}.
-            
-            ### Objective
-            Analyze the problem carefully. Think aloud as you:
-            1. Understand the constraints and ranges
-            2. Break down the problem into logical steps
-            3. Identify edge cases and input corner conditions
-            4. Choose the most efficient algorithm and data structures
-            5. Only then proceed to write the final clean code.
-            
-            ---
-            
-            ### Problem Specification
-            '''
-            Description: {prob_desc_description}
-            Input: {prob_desc_input_spec}
-            Output: {prob_desc_output_spec}
-            Sample Input: {prob_desc_sample_inputs}
-            Sample Output: {prob_desc_sample_outputs}
-            Explanation: {prob_desc_notes}
-            '''
-            
-            ---
-            
-            ### Output Format
-            Return only a valid JSON list containing your solution:
-            ⁠ json
-            [{{
-              "target_code": "<your_complete_function_or_program_here>",
-              "version": "{env_map[lang]}"
-            }}]
-             ⁠
-            
-            - Do NOT include markdown or triple backticks.
-            - JSON must be strictly valid and parsable via ⁠ json.loads() ⁠.
-            - Escape all special characters correctly.
-            
-            ---
-            
-            ### Example (Chain-of-Thought + Code)
-            #### Problem
-            A system logs when readers enter or leave a room. Find the *minimum possible maximum occupancy* at any time, accounting for people who may have already been inside before logging began.
-            
-            #### Sample Input
-            6
-            + 12001
-            - 12001
-            - 1
-            - 1200
-            + 1
-            + 7
-            
-            #### Sample Output
-            3
-            
-            #### Chain-of-Thought
-            1. Use a ⁠ set ⁠ to track the current people in the room.
-            2. When a person enters (⁠ + id ⁠), add them to the set and increase the count.
-            3. When someone leaves (⁠ - id ⁠):
-               - If they were in the set, remove them and decrease the count.
-               - If not in the set, assume they were already in the room before logging began — treat this as a missing "enter" and bump up the capacity.
-            4. At each step, record the max number of people simultaneously present.
-            5. Final answer is this peak value.
-            
-            #### Final Output
-            ⁠ json
-            [{{
-              "target_code": "def solve():\n    n = int(input())\n    current = set()\n    max_capacity = 0\n    cur_count = 0\n    for _ in range(n):\n        op, val = input().split()\n        val = int(val)\n        if op == '+':\n            current.add(val)\n            cur_count += 1\n        else:\n            if val in current:\n                current.remove(val)\n                cur_count -= 1\n            else:\n                max_capacity += 1\n        max_capacity = max(max_capacity, cur_count)\n    print(max_capacity)\nsolve()",
-              "version": "Python 3.12"
-            }}]
-             ⁠
-            
-            ---
-            
-            ### Final Instructions
-            - Think step-by-step and generate only the final solution.
-            - Do not include explanations or markdown in the output.
-            - Code must compile and pass all sample inputs.
-            """
+### Role Instruction
+Act as a senior software engineer specializing in algorithmic problem solving and production-grade code implementation. Read and analyze the problem step by step. Generate a complete, optimized solution adhering strictly to the provided specifications.
 
+### Problem Context
+'''
+1.⁠ ⁠Problem Description: {prob_desc_description}
+2.⁠ ⁠Input Specification: {prob_desc_input_spec}
+3.⁠ ⁠Output Specification: {prob_desc_output_spec}
+4.⁠ ⁠Sample Cases:
+   - Input: {prob_desc_sample_inputs}
+   - Expected Output: {prob_desc_sample_outputs}
+   - Explanation: {prob_desc_notes}
+'''
+
+### Technical Requirements
+'''
+•⁠  ⁠Target Language: {lang} {env_map[lang]}
+•⁠  ⁠Code Constraints: Minimize external dependencies and complex headers
+•⁠  ⁠Performance: Optimize for time/space complexity
+•⁠  ⁠Standards: Follow {lang} best practices and PEP8/equivalent style guidelines
+'''
+
+### Output Format Specification
+'''
+[{{
+  "version": "<exact_language_version>",
+  "target_code": "<complete_solution_code>"
+}}]
+'''
+
+### Generation Rules
+1.⁠ ⁠Analyze sample I/O patterns to derive implementation logic
+2.⁠ ⁠Validate solution against all specified edge cases
+3.⁠ ⁠Include necessary standard library imports
+4.⁠ ⁠Avoid unnecessary comments but maintain readable code
+5.⁠ ⁠Ensure strict JSON syntax with proper escaping
+6.⁠ ⁠Prohibit markdown formatting or textual explanations
+7. Follow a step by step reasoning approach to ensure clarity and correctness
+
+
+### Example Response
+[{{
+  "version": "Python 3.11",
+  "target_code": "def solution(args):\n    ..."
+}}]
+
+*Critical Implementation Notes:*
+•⁠  ⁠Output MUST contain ONLY valid JSON parsable by json.loads()
+•⁠  ⁠Never include markdown formatting or triple backticks
+•⁠  ⁠Escape all special characters properly
+•⁠  ⁠Validate JSON syntax before final output
+
+"""
     logging.info('problem src_id: ' + str(prob_uid))
     logging.info(prompt)
     input_tokens = count_message_tokens(prompt, args.model, 'input')
