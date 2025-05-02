@@ -1,0 +1,54 @@
+# Byte-compiled / optimized / DLL files
+__pycache__/
+*.py[cod]
+*$py.class
+
+# C extensions
+*.so
+
+# Environment folders
+.venv/
+env/
+venv/
+
+# Jupyter Notebook checkpoints
+.ipynb_checkpoints
+
+# VSCode and PyCharm settings
+.vscode/
+.idea/
+
+# Mac system files
+.DS_Store
+
+# Test and results files
+*.log
+*.tmp
+*.bak
+*.swp
+*.swo
+
+# Generated results and reports
+results.json
+processed_results.json
+report.pdf
+
+# API keys or configs (ensure you don’t accidentally commit these)
+.env
+config.json
+
+# PyInstaller
+*.spec
+
+# Jupyter runtime
+~/.local/share/jupyter/runtime/
+
+# Python egg files
+*.egg
+*.egg-info/
+dist/
+build/
+
+# Pip dependency file lock
+Pipfile.lock
+poetry.lock
